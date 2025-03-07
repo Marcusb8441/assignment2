@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Population Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        #content {
+            margin-top: 30px;
+            text-align: center;
+        }
+        table {
+            width: 60%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        #population {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>US Population Data</h1>
+</header>
+
+<div id="content">
+    <table id="population-table">
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Population</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated here by JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <p>Data provided by <a href="https://datausa.io/" target="_blank">Data USA</a></p>
+</footer>
+
+<script>
+    // Fetches the  population data for the US for all years
+    fetch('https://datausa.io/api/data?drilldowns=Nation&measures=Population')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#population-table tbody');
+            data.data.forEach(item => {
+                const row = document.createElement('tr');
+                const yearCell = document.createElement('td');
+                const populationCell = document.createElement('td');
+
+                yearCell.textContent = item.Year;
+                populationCell.textContent = item.Population.toLocaleString(); 
+
+                row.appendChild(yearCell);
+                row.appendChild(populationCell);
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching the data:', error);
+            const tableBody = document.querySelector('#population-table tbody');
+            const row = document.createElement('tr');
+            const errorCell = document.createElement('td');
+            errorCell.colSpan = 2;
+            errorCell.textContent = 'Failed to load population data.';
+            row.appendChild(errorCell);
+            tableBody.appendChild(row);
+        });
+</script>
+
+</body>
+</html>
